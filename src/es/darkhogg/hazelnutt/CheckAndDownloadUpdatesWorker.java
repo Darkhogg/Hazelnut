@@ -22,8 +22,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.SwingUtilities;
@@ -33,7 +35,7 @@ import org.apache.log4j.Logger;
 
 import es.darkhogg.util.Version;
 
-public class CheckAndDownloadUpdatesWorker extends SwingWorker<File,String> {
+public class CheckAndDownloadUpdatesWorker extends SwingWorker<List<File>,String> {
 
 	private CheckUpdatesDialog dialog;
 	
@@ -42,35 +44,39 @@ public class CheckAndDownloadUpdatesWorker extends SwingWorker<File,String> {
 	}
 
 	@Override
-	protected File doInBackground () /*throws Exception*/ {
+	protected List<File> doInBackground () /*throws Exception*/ {
 		Logger logger = Hazelnutt.getLogger();
-		Version latestVersion = null;
 		Version currentVersion = Hazelnutt.getVersion();
-		URL downloadUrl = null;
-		boolean updatesAvailable;
+		List<String> urls = new ArrayList<String>();
+		List<String> vers = new ArrayList<String>();
 		
 		// Step 1: Retrieve the version from the server
 		if ( !isCancelled() ) {
 			BufferedReader input = null;
 			try {
 				setProgress( 0 );
-				publish( "Checking latest version..." );
-				logger.info( "Checking latest version..." );
+				publish( "Checking for updates..." );
+				logger.info( "Checking for updates..." );
 				
-				URL versionUrl = new URL( "http://darkhogg.es/hazelnutt/version" );
+				URL versionUrl = new URL( "http://darkhogg.es/hazelnutt/update-info.txt" );
 				
 				URLConnection conn = versionUrl.openConnection();
 				input = new BufferedReader(
 					new InputStreamReader( conn.getInputStream() ) );
 	
-				String verStr = input.readLine();
-				downloadUrl = new URL( input.readLine() );
-				
-				latestVersion = Version.valueOf( verStr );
+				while ( input.ready() ) {
+					String line = input.readLine().trim();
+					String[] pieces = line.split( "\\s+" );
+					
+					if ( pieces.length == 2 ) {
+						vers.add( pieces[0] );
+						urls.add( pieces[1] );
+					}
+				}
 			} catch ( IOException e ) {
 				logger.error( "An error has ocurred while checking last version: " + e );
 				setProgress( 100 );
-				publish( "Connection Error!" );
+				publish( "Connection Error" );
 				e.printStackTrace();
 			} finally {
 				if ( input != null ) {
@@ -84,41 +90,65 @@ public class CheckAndDownloadUpdatesWorker extends SwingWorker<File,String> {
 		}
 		
 		// Step 2: Compare the two versions
-		updatesAvailable = latestVersion.compareTo( currentVersion ) > 0;
+		boolean updatesAvailable = false;
+		List<URL> dlurls = new ArrayList<URL>();
+		
+		try {
+			for ( int i = 0; i < urls.size(); i++ ) {
+				Version ver = Version.valueOf( vers.get( i ) );
+				if ( ver.compareTo( currentVersion ) > 0 ) {
+					updatesAvailable = true;
+					dlurls.add( new URL( urls.get( i ) ) );
+				}
+			}
+		} catch ( MalformedURLException e ) {
+			logger.error( "An error has ocurred while checking for updates" );
+			setProgress( 100 );
+			publish( "Unexpected Error" );
+			e.printStackTrace();
+			return null;
+		}
+		
 		if ( !isCancelled() && updatesAvailable ) {
-			String msg = "Downloading Hazelnutt " + latestVersion;
+			String msg = "Downloading Hazelnutt Updates";
 			setProgress( 0 );
 			publish( msg );
 			
 			// Step 3: Download the new version
-			File dlFile = null;
 			FileOutputStream fout = null;
 			InputStream uin = null;
 			try {
 				logger.info( msg );
 				
-				dlFile = File.createTempFile( "Hazelnutt", ".zip" );
-				URLConnection conn = downloadUrl.openConnection();
-				uin = conn.getInputStream();
-				fout = new FileOutputStream( dlFile );
+				List<File> ret = new ArrayList<File>();
 				
-				int fSize = conn.getContentLength();
-				int read = 0;
-				
-				byte[] bytes = new byte[ 64*1024 ];
-				while ( read < fSize && !isCancelled() ) {
-					int num = uin.read( bytes );
-					fout.write( bytes, 0, num );
-					read += num;
+				for ( URL downloadUrl : dlurls ) {
 					
-					setProgress( (int)( 100*read/fSize ) );
-					publish( msg );
+					File dlFile = File.createTempFile( "Hn-update-", ".zip" );
+					URLConnection conn = downloadUrl.openConnection();
+					uin = conn.getInputStream();
+					fout = new FileOutputStream( dlFile );
+					
+					int fSize = conn.getContentLength();
+					int read = 0;
+					
+					byte[] bytes = new byte[ 64*1024 ];
+					while ( read < fSize && !isCancelled() ) {
+						int num = uin.read( bytes );
+						fout.write( bytes, 0, num );
+						read += num;
+						
+						setProgress( (int)( 100*read/fSize ) );
+						publish( msg );
+					}
+
+					ret.add( dlFile );
 				}
 				
 				if ( !isCancelled() ) {
 					setProgress( 100 );
 					publish( "Download Successful!" );
-					logger.info( "Successfully Downloaded at " + dlFile );
+					logger.info( "Successfully Downloaded" );
 					
 					SwingUtilities.invokeLater( new Runnable(){
 						@Override public void run () {
@@ -126,8 +156,9 @@ public class CheckAndDownloadUpdatesWorker extends SwingWorker<File,String> {
 						}
 					});
 					
-					return dlFile;
 				}
+				
+				return ret;
 			} catch ( IOException e ) {
 				logger.error( "An error has ocurred while downloading the last version: " + e );
 				setProgress( 100 );

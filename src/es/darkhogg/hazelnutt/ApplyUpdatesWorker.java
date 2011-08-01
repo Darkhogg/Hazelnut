@@ -35,11 +35,11 @@ import org.apache.log4j.Logger;
 public final class ApplyUpdatesWorker extends SwingWorker<Void,String> {
 
 	private CheckUpdatesDialog dialog;
-	private File file;
+	private List<File> files;
 	
-	public ApplyUpdatesWorker ( CheckUpdatesDialog dialog, File file ) {
+	public ApplyUpdatesWorker ( CheckUpdatesDialog dialog, List<File> files ) {
 		this.dialog = dialog;
-		this.file = file;
+		this.files = files;
 	}
 	
 
@@ -47,40 +47,58 @@ public final class ApplyUpdatesWorker extends SwingWorker<Void,String> {
 	protected Void doInBackground () throws Exception {
 		Logger logger = Hazelnutt.getLogger();
 		
-		ZipFile zipFile = new ZipFile( file );
-		Enumeration<? extends ZipEntry> en = zipFile.entries();
-		
-		File bakDir = new File( "bak" );
-		if ( !bakDir.exists() ) {
-			bakDir.mkdir();
-		}
-
-		InputStream fis = null;
-		OutputStream fos = null;
-		
-		setProgress( 0 );
-		int n = 0;
-		while ( !isCancelled() && en.hasMoreElements() ) {
-			try {
-				ZipEntry ze = en.nextElement();
-				File oldFile = new File( ze.getName() );
-				File newFile = new File( bakDir.getPath(), ze.getName() );
-				
-				if ( ze.isDirectory() ) {
-					if ( !newFile.exists() ) {
-						newFile.mkdir();
-					}
-				} else {
+		for ( File file : files ) {
+			ZipFile zipFile = new ZipFile( file );
+			Enumeration<? extends ZipEntry> en = zipFile.entries();
 			
-					// Copy old file to 'bak' directory
-					if ( oldFile.exists() ) {
-						logger.info( "Copying '" + oldFile + "' to '" + newFile + "'" );
-						publish( "Backing up '" + oldFile + "'" );
-						newFile.createNewFile();
-						
-						fis = new FileInputStream( oldFile );
-						fos = new FileOutputStream( newFile );
+			File bakDir = new File( "bak" );
+			if ( !bakDir.exists() ) {
+				bakDir.mkdir();
+			}
 	
+			InputStream fis = null;
+			OutputStream fos = null;
+			
+			setProgress( 0 );
+			int n = 0;
+			while ( !isCancelled() && en.hasMoreElements() ) {
+				try {
+					ZipEntry ze = en.nextElement();
+					File oldFile = new File( ze.getName() );
+					File newFile = new File( bakDir.getPath(), ze.getName() );
+					
+					if ( ze.isDirectory() ) {
+						if ( !newFile.exists() ) {
+							newFile.mkdir();
+						}
+					} else {
+				
+						// Copy old file to 'bak' directory
+						if ( oldFile.exists() ) {
+							logger.info( "Copying '" + oldFile + "' to '" + newFile + "'" );
+							publish( "Backing up '" + oldFile + "'" );
+							newFile.createNewFile();
+							
+							fis = new FileInputStream( oldFile );
+							fos = new FileOutputStream( newFile );
+		
+							{
+								byte[] buf = new byte[ 8*1024 ];
+								int i = 0;
+								while ( !isCancelled() && (i = fis.read( buf )) != -1 ) {
+									fos.write( buf, 0, i );
+								}
+							}
+						
+							fis.close();
+							fos.close();
+						}
+						
+						// Copy new file
+						logger.info( "Extracting '" + ze.getName() + "' to '" + oldFile + "'" );
+						publish( "Extracting '" + ze.getName() + "'" );
+						fis = zipFile.getInputStream( ze );
+						fos = new FileOutputStream( oldFile );
 						{
 							byte[] buf = new byte[ 8*1024 ];
 							int i = 0;
@@ -88,38 +106,23 @@ public final class ApplyUpdatesWorker extends SwingWorker<Void,String> {
 								fos.write( buf, 0, i );
 							}
 						}
-					
-						fis.close();
-						fos.close();
+						
+						setProgress( 100*n/zipFile.size() );
+						n++;
 					}
 					
-					// Copy new file
-					logger.info( "Extracting '" + ze.getName() + "' to '" + oldFile + "'" );
-					publish( "Extracting '" + ze.getName() + "'" );
-					fis = zipFile.getInputStream( ze );
-					fos = new FileOutputStream( oldFile );
-					{
-						byte[] buf = new byte[ 8*1024 ];
-						int i = 0;
-						while ( !isCancelled() && (i = fis.read( buf )) != -1 ) {
-							fos.write( buf, 0, i );
-						}
-					}
-					
-					setProgress( 100*n/zipFile.size() );
-					n++;
+					publish( "Finished!" );
+				} catch ( IOException e ) {
+					setProgress( 100 );
+					publish( "Error extracting files" );
+					logger.error( "Error while extracting files" );
+					e.printStackTrace();
+					cancel( false );
+					return null;
+				} finally {
+					if ( fis != null ) { fis.close(); }
+					if ( fos != null ) { fos.close(); }
 				}
-				
-				publish( "Finished!" );
-			} catch ( IOException e ) {
-				setProgress( 100 );
-				publish( "Error extracting files" );
-				logger.error( "Error while extracting files!" );
-				e.printStackTrace();
-				cancel( false );
-			} finally {
-				if ( fis != null ) { fis.close(); }
-				if ( fos != null ) { fos.close(); }
 			}
 		}
 		
