@@ -838,7 +838,7 @@ public class EditorFrame extends JFrame {
 		actionScale( true );
 		setIconImage(
 			Toolkit.getDefaultToolkit().getImage(EditorFrame.class.getResource(
-			"/es/darkhogg/hazelnutt/witch_hazel.png")));
+			"/es/darkhogg/hazelnutt/witch_hazel_big.png")));
 		setRomFeaturesEnabled( false );
 		setLevelFeaturesEnabled( false );
 		
