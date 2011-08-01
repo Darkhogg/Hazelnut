@@ -719,6 +719,8 @@ public class EditorFrame extends JFrame {
 				} else if ( st == SelectionType.SPAWN ) {
 					selectedLevel.getRomLevel().setSpawn(
 						new IntVector( x, y ) );
+
+					levelHasChanged = true;
 				} else if ( st == SelectionType.ITEM ) {
 					Item ent = new Item( (ItemType) so, x, y );
 					EntityCollection<Item> ents = selectedLevel.getRomLevel().getItems();
@@ -730,6 +732,7 @@ public class EditorFrame extends JFrame {
 					}
 					if ( ents.size() <= ents.maxSize() ) {
 						ents.add( ent );
+						levelHasChanged = true;
 					}
 				} else if ( st == SelectionType.DOOR_ITEM ) {
 					Item ent = new Item( (ItemType) so, x, y );
@@ -742,6 +745,7 @@ public class EditorFrame extends JFrame {
 					}
 					if ( ents.size() <= ents.maxSize() ) {
 						ents.add( ent );
+						levelHasChanged = true;
 					}
 				} else if ( st == SelectionType.ENEMY ) {
 					Enemy ent = new Enemy( (EnemyType) so, x, y );
@@ -754,6 +758,7 @@ public class EditorFrame extends JFrame {
 					}
 					if ( ents.size() <= ents.maxSize() ) {
 						ents.add( ent );
+						levelHasChanged = true;
 					}
 				}
 
@@ -814,6 +819,7 @@ public class EditorFrame extends JFrame {
 						Item doorItem = it.next();
 						if ( doorItem.getX() == x && doorItem.getY() == y ) {
 							it.remove();
+							levelHasChanged = true;
 						}
 					}
 				}
@@ -823,6 +829,7 @@ public class EditorFrame extends JFrame {
 						Enemy enem = it.next();
 						if ( enem.getX() == x && enem.getY() == y ) {
 							it.remove();
+							levelHasChanged = true;
 						}
 					}
 				}
