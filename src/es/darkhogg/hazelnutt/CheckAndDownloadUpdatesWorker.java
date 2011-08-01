@@ -141,20 +141,21 @@ public class CheckAndDownloadUpdatesWorker extends SwingWorker<List<File>,String
 						setProgress( (int)( 100*read/fSize ) );
 						publish( msg );
 					}
+
+					ret.add( dlFile );
+				}
+				
+				if ( !isCancelled() ) {
+					setProgress( 100 );
+					publish( "Download Successful!" );
+					logger.info( "Successfully Downloaded" );
 					
-					if ( !isCancelled() ) {
-						setProgress( 100 );
-						publish( "Download Successful!" );
-						logger.info( "Successfully Downloaded at " + dlFile );
-						
-						SwingUtilities.invokeLater( new Runnable(){
-							@Override public void run () {
-								dialog.applyButton.setEnabled( true );
-							}
-						});
-						
-						ret.add( dlFile );
-					}
+					SwingUtilities.invokeLater( new Runnable(){
+						@Override public void run () {
+							dialog.applyButton.setEnabled( true );
+						}
+					});
+					
 				}
 				
 				return ret;
