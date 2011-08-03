@@ -160,7 +160,7 @@ public final class RomLevel {
 		if ( spawn.getX() < 0 || spawn.getX() >= size.getX()
 		  || spawn.getY() < 0 || spawn.getY() >= size.getY()
 		) {
-			throw new IllegalArgumentException();
+			throw new IllegalArgumentException( spawn.toString() );
 		}
 		this.spawn = spawn;
 	}

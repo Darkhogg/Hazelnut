@@ -158,7 +158,7 @@ public final class BugsRom {
 			for ( int i = 0; i < 29; i++ ) {
 				contents.position( LEVELS_ADDRS[ i ] );
 				RomLevel rl = RomLevelFormat.getInstance().loadRomLevelFromBuffer(
-					contents, i==28 );
+					contents, i==27 );
 				levels[ i ] = new Level( rl, groups[ i ], passwords[ i ] );
 			}
 			
