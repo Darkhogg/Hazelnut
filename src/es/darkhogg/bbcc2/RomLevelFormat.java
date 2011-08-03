@@ -201,7 +201,7 @@ public final class RomLevelFormat extends LevelFormat {
 			i++;
 			n++;
 		}
-		while ( n < level.getDoorItems().maxSize() && !(i < 15 || !sp) ) {
+		while ( n < level.getDoorItems().maxSize() && ( n < 15 || !sp ) ) {
 			bytes += 3;
 			buffer.put( threeZeros );
 			n++;
