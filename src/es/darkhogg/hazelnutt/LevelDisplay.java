@@ -16,6 +16,7 @@
  */
 package es.darkhogg.hazelnutt;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
@@ -54,6 +55,7 @@ public final class LevelDisplay extends JComponent {
 	private boolean displayDoorItems;
 	private boolean displayHelp;
 	private double scale = 1;
+	private boolean grid = false;
 	
 	private boolean lftBtn, cntBtn, rgtBtn; 
 	
@@ -70,8 +72,10 @@ public final class LevelDisplay extends JComponent {
 		
 		this.addMouseListener( new MouseAdapter(){
 			@Override public void mousePressed ( MouseEvent me ) {
-				int x = (int)( me.getX() / (16*scale) );
-				int y = (int)( me.getY() / (16*scale) );
+				final int SEP = grid ? 17 : 16;
+				
+				int x = (int)( me.getX() / (SEP*scale) );
+				int y = (int)( me.getY() / (SEP*scale) );
 				
 				int but = me.getButton();
 				if ( but == MouseEvent.BUTTON1 ) {
@@ -121,8 +125,10 @@ public final class LevelDisplay extends JComponent {
 			private int lastY = -1;
 			
 			@Override public void mouseDragged ( MouseEvent me ) {
-				int x = (int)( me.getX() / (16*scale) );
-				int y = (int)( me.getY() / (16*scale) );
+				final int SEP = grid ? 17 : 16;
+				
+				int x = (int)( me.getX() / (SEP*scale) );
+				int y = (int)( me.getY() / (SEP*scale) );
 				
 				if ( level != null
 				 && ( x != lastX || y != lastY )
@@ -230,6 +236,8 @@ public final class LevelDisplay extends JComponent {
 		super.paintComponent( gr );
 		
 		if ( level != null && comboSet != null ) {
+			final int SEP = grid ? 17 : 16;
+			
 			RomLevel rl = level.getRomLevel();
 			byte[][] data = rl.getData();
 			
@@ -243,7 +251,7 @@ public final class LevelDisplay extends JComponent {
 					int val = ((int)(data[i][j])) & 0xFF;
 					g.drawImage(
 						comboSet.get( val ),
-						i*16, j*16, null
+						i*SEP, j*SEP, null
 					);
 					
 					if ( displayHelp && helpSet != null ) {
@@ -251,10 +259,27 @@ public final class LevelDisplay extends JComponent {
 						if ( ct != null ) {
 							Image im = helpSet.get( ct );
 							if ( im != null ) {
-								g.drawImage( im, i*16, j*16, null );
+								g.drawImage( im, i*SEP, j*SEP, null );
 							}
 						}
 					}
+				}
+			}
+			
+			// Display the grid if necessary
+			if ( grid ) {
+				final int w = rl.getSize().getX();
+				final int h = rl.getSize().getY();
+				g.setColor( Color.GRAY );
+				
+				// Vertical
+				for ( int i = 0; i < w; i++ ) {
+					g.drawLine( i*SEP-1, 0, i*SEP-1, h*SEP );
+				}
+				
+				// Horizontal
+				for ( int j = 0; j < h; j++ ) {
+					g.drawLine( 0, j*SEP-1, w*SEP, j*SEP-1 );
 				}
 			}
 			
@@ -264,7 +289,7 @@ public final class LevelDisplay extends JComponent {
 					int val = it.getType().getValue() & 0xFF;
 					g.drawImage( 
 						itemSet.get( val ),
-						it.getX()*16, it.getY()*16, null
+						it.getX()*SEP, it.getY()*SEP, null
 					);
 				}
 			}
@@ -275,7 +300,7 @@ public final class LevelDisplay extends JComponent {
 					int val = en.getType().getValue() & 0xFF;
 					g.drawImage( 
 						enemySet.get( val ),
-						en.getX()*16, en.getY()*16-8, null
+						en.getX()*SEP, en.getY()*SEP-SEP/2, null
 					);
 				}
 			}
@@ -286,15 +311,15 @@ public final class LevelDisplay extends JComponent {
 					int val = it.getType().getValue() & 0xFF;
 					g.drawImage( 
 						doorItemSet.get( val ),
-						it.getX()*16, it.getY()*16, null
+						it.getX()*SEP, it.getY()*SEP, null
 					);
 				}
 			}
 			
 			// Display the spawn
 			if ( displaySpawn && bugsImage != null ) {
-				g.drawImage( bugsImage, rl.getSpawn().getX()*16,
-					rl.getSpawn().getY()*16-8, null
+				g.drawImage( bugsImage, rl.getSpawn().getX()*SEP,
+					rl.getSpawn().getY()*SEP-SEP/2, null
 				);
 			}
 			
@@ -324,6 +349,12 @@ public final class LevelDisplay extends JComponent {
 		this.scale = scale;
 		
 		updateSize();
+		repaint();
+	}
+	
+	public void setGrid ( boolean grid ) {
+		this.grid = grid;
+		
 		repaint();
 	}
 	

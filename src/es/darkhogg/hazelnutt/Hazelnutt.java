@@ -236,6 +236,7 @@ public final class Hazelnutt {
 				ThreadGroup group = threadGroups.remove();
 				
 				Thread[] subThreads = new Thread[ group.activeCount()*2 ];
+				//group.enumerate( subThreads );
 				for ( Thread subThread : subThreads ) {
 					if ( subThread != null ) {
 						threads.add( subThread );
@@ -266,7 +267,8 @@ public final class Hazelnutt {
 			}
 		
 		} catch ( Throwable e ) {
-			e.printStackTrace();
+			LOGGER.warn( "Interrupted while terminating application", e );
+			
 		} finally {
 			// Exit the program
 			System.exit( 0 );

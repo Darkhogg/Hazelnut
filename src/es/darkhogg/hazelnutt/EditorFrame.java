@@ -167,8 +167,9 @@ public class EditorFrame extends JFrame {
 	private JMenuItem mntmPreferences;
 	private JScrollPane scrollPane;
 	private LevelDisplay levelDisplay;
-	
+
 	private JToggleButton scaleButton;
+	private JToggleButton gridButton;
 	private SelectorPanel selectorPanel;
 	
 	private boolean romHasChanged, levelHasChanged;
@@ -177,6 +178,7 @@ public class EditorFrame extends JFrame {
 	private static final Map<ComboType,Image> helpSet;
 	private JPanel levelWrapper;
 	private JCheckBoxMenuItem scaleMenuItem;
+	private JCheckBoxMenuItem gridMenuItem;
 	private JMenuItem menuClearLevel;
 	private JMenuItem menuSaveRomAs;
 	private JMenuItem menuImportLevel;
@@ -461,6 +463,17 @@ public class EditorFrame extends JFrame {
 		scaleMenuItem.setIcon(new ImageIcon(EditorFrame.class.getResource("/es/darkhogg/hazelnutt/icon_x2.png")));
 		mnEdit.add(scaleMenuItem);
 		
+		gridMenuItem = new JCheckBoxMenuItem("Display grid");
+		gridMenuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_7, 0));
+		gridMenuItem.setMnemonic('G');
+		gridMenuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				actionGrid( false );
+			}
+		});
+		gridMenuItem.setIcon(new ImageIcon(EditorFrame.class.getResource("/es/darkhogg/hazelnutt/icon_grid.png")));
+		mnEdit.add(gridMenuItem);
+		
 		//mnEdit.addSeparator();
 		
 		mntmPreferences = new JMenuItem("Preferences...");
@@ -693,6 +706,18 @@ public class EditorFrame extends JFrame {
 		
 		scaleButton.setSelected( config.getBoolean( "Hazelnutt.gui.scaled", false ) );
 		
+		gridButton = new JToggleButton("");
+		gridButton.setToolTipText("Display Grid");
+		gridButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				actionGrid( true );
+			}
+		});
+		gridButton.setIcon(new ImageIcon(EditorFrame.class.getResource("/es/darkhogg/hazelnutt/icon_grid.png")));
+		toolBar.add(gridButton);
+		
+		gridButton.setSelected( config.getBoolean( "Hazelnutt.gui.grid", false ) );
+		
 		Component horizontalGlue = Box.createHorizontalGlue();
 		toolBar.add(horizontalGlue);
 		
@@ -843,6 +868,7 @@ public class EditorFrame extends JFrame {
 		updateTitle();
 		actionToggle( true );
 		actionScale( true );
+		actionGrid( true );
 		setIconImage(
 			Toolkit.getDefaultToolkit().getImage(EditorFrame.class.getResource(
 			"/es/darkhogg/hazelnutt/witch_hazel_big.png")));
@@ -1093,7 +1119,7 @@ public class EditorFrame extends JFrame {
 		updateTitle();
 		return true;
 	}
-	
+
 	private void actionScale ( boolean toolBar ) {
 		if ( toolBar ) {
 			scaleMenuItem.setSelected( scaleButton.isSelected() );
@@ -1104,6 +1130,18 @@ public class EditorFrame extends JFrame {
 		boolean selected = scaleButton.isSelected();
 		levelDisplay.setScale( selected?2:1 );
 		config.setProperty( "Hazelnutt.gui.scaled", selected );
+	}
+	
+	private void actionGrid ( boolean toolBar ) {
+		if ( toolBar ) {
+			gridMenuItem.setSelected( gridButton.isSelected() );
+		} else {
+			gridButton.setSelected( gridMenuItem.isSelected() );
+		}
+		
+		boolean selected = gridButton.isSelected();
+		levelDisplay.setGrid( selected );
+		config.setProperty( "Hazelnutt.gui.grid", selected );
 	}
 	
 	private void actionPreferences () {
@@ -1165,6 +1203,8 @@ public class EditorFrame extends JFrame {
 
 		scaleButton.setEnabled( enabled );
 		scaleMenuItem.setEnabled( enabled );
+		gridButton.setEnabled( enabled );
+		gridMenuItem.setEnabled( enabled );
 		
 		if ( enabled ) {
 			setRomFeaturesEnabled( true );
