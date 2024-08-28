@@ -1,0 +1,110 @@
+<project name="hazelnutt" default="dist">
+
+  <property name="dir.src" value="src" />
+  <property name="dir.res" value="res" />
+  <property name="dir.lib" value="lib" />
+  <property name="dir.devlib" value="devlib" />
+  <property name="dir.build" value="build" />
+  <property name="dir.dist" value="dist" />
+
+  <property name="filename.onejar" value="hazelnutt.one.jar" />
+
+  <property name="filename.launcher.linux" value="hazelnutt.sh" />
+  <property name="filename.launcher.mac" value="hazelnutt.sh" />
+  <property name="filename.launcher.windows" value="hazelnutt.bat" />
+
+  <property name="file.jar" value="${dir.dist}/hazelnutt.jar" />
+  <property name="file.onejar" value="${dir.dist}/${filename.onejar}" />
+  <property name="file.zip" value="${dir.dist}/hazelnutt.zip" />
+
+  <property name="class.main" value="es.darkhogg.hazelnutt.Hazelnutt" />
+
+  <!-- Load the OneJar task -->
+  <taskdef name="one-jar" classname="com.simontuffs.onejar.ant.OneJarTask" onerror="report">
+    <classpath>
+      <fileset dir="${dir.devlib}" includes="**/*.jar" />
+    </classpath>
+  </taskdef>
+
+  <!-- Defines the classpath -->
+  <target name="-classpath" depends="-mkdir-dist">
+    <manifestclasspath property="classpath" jarfile="${file.jar}">
+      <classpath>
+        <fileset dir="${dir.lib}" includes="**/*.jar" />
+      </classpath>
+    </manifestclasspath>
+  </target>
+
+  <!-- Create the build directory -->
+  <target name="-mkdir-build">
+    <mkdir dir="${dir.build}" />
+  </target>
+
+  <!-- Create the distribution directory -->
+  <target name="-mkdir-dist">
+    <mkdir dir="${dir.dist}" />
+  </target>
+
+  <!-- Compiles everything from the source directory to the build directory -->
+  <target name="compile" depends="-mkdir-build">
+    <javac srcdir="${dir.src}" destdir="${dir.build}" includeantruntime="false" release="22">
+      <classpath>
+        <fileset dir="${dir.lib}" includes="**/*.jar" />
+      </classpath>
+    </javac>
+  </target>
+
+  <!-- Copies everything from the resources directory to the build directory -->
+  <target name="-resources" depends="-mkdir-build">
+    <copy todir="${dir.build}">
+      <fileset dir="${dir.res}" />
+    </copy>
+  </target>
+
+  <!-- Create a runnable JAR with everything -->
+  <target name="jar" depends="compile, -resources, -mkdir-dist, -classpath">
+    <jar destfile="${file.jar}" basedir="${dir.build}">
+      <manifest>
+        <attribute name="Main-Class" value="${class.main}" />
+        <attribute name="Permissions" value="all-permissions" />
+        <attribute name="Class-Path" value="${classpath}" />
+      </manifest>
+    </jar>
+
+    <chmod file="${file.jar}" perm="u+x" />
+  </target>
+
+  <!-- Create a runnable JAR that stands alone using OneJAR -->
+  <target name="onejar" depends="jar">
+    <one-jar destfile="${file.onejar}">
+      <main jar="${file.jar}"/>
+
+      <lib>
+        <fileset dir="${dir.lib}" includes="**/*.jar" />
+      </lib>
+    </one-jar>
+  </target>
+
+  <!-- Create a JAR and run it -->
+  <target name="run" depends="onejar">
+    <java jar="${file.onejar}" fork="true" />
+  </target>
+
+  <!-- Pack the JAR in a ZIP with the launchers -->
+  <target name="dist" depends="onejar">
+    <zip destfile="${file.zip}">
+      <fileset dir=".">
+        <include name="${filename.launcher.linux}" />
+        <include name="${filename.launcher.mac}" />
+        <include name="${filename.launcher.windows}" />
+      </fileset>
+      <fileset dir="${dir.dist}" includes="${filename.onejar}"/>
+    </zip>
+  </target>
+
+  <!-- Clean old compilations -->
+  <target name="clean">
+    <delete dir="${dir.build}" />
+    <delete dir="${dir.dist}" />
+  </target>
+</project>
