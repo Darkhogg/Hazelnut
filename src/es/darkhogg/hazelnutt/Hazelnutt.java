@@ -1,16 +1,16 @@
 /**
  * This file is part of Hazelnutt.
- * 
+ *
  * Hazelnutt is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Hazelnutt is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Hazelnutt.  If not, see <http://www.gnu.org/licenses/>.
  */
@@ -39,19 +39,19 @@ import org.apache.log4j.varia.NullAppender;
 import es.darkhogg.util.Version;
 
 public final class Hazelnutt {
-	
+
 	/**
 	 * Version of the program
 	 */
-	private static final Version VERSION = new Version( 1, 0, 8, 2 );
-	
+	private static final Version VERSION = new Version( 1, 0, 9 );
+
 	/**
 	 * Logger for the whole application
 	 */
 	private static final Logger LOGGER;
 	static {
 		Logger.getRootLogger().addAppender( NullAppender.getNullAppender() );
-		
+
 		try {
 			LOGGER = Logger.getLogger( Hazelnutt.class );
 			LOGGER.addAppender( new ConsoleAppender(
@@ -69,7 +69,7 @@ public final class Hazelnutt {
 			throw new RuntimeException( e );
 		}
 	}
-	
+
 	/**
 	 * Configuration for the whole application
 	 */
@@ -84,10 +84,10 @@ public final class Hazelnutt {
 		}
 
 		cfg.setAutoSave( true );
-		
+
 		CONFIG = cfg;
 	}
-	
+
 	/**
 	 * Main frame of the program
 	 */
@@ -95,62 +95,62 @@ public final class Hazelnutt {
 	static {
 		FRAME = new EditorFrame();
 	}
-	
+
 	/**
 	 * Returns the current version of the application as an integer, where each
 	 * byte is a version component.
-	 * 
+	 *
 	 * @return This application version
 	 */
 	public static Version getVersion () {
 		return VERSION;
 	}
-	
+
 	/**
 	 * Returns an already initialized and configured Logger for the whole
 	 * application.
-	 * 
+	 *
 	 * @return This application logger
 	 */
 	public static Logger getLogger () {
 		return LOGGER;
 	}
-	
+
 	/**
 	 * Returns an already created and initialized JFrame which is the main
 	 * frame for this application.
-	 * 
+	 *
 	 * @return This application main frame
 	 */
 	public static EditorFrame getFrame () {
 		return FRAME;
 	}
-	
+
 	/**
 	 * Returns an already created, loaded and ready to be used Configuration
 	 * for the whole application.
-	 * 
+	 *
 	 * @return This application configuration object
 	 */
 	public static Configuration getConfiguration () {
 		return CONFIG;
 	}
-	
+
 	/**
 	 * Tries to restart the application in at most <i>time</i> milliseconds for
 	 * every alive thread.
-	 * 
+	 *
 	 * @param time Number of milliseconds to wait for each thread to terminate
 	 * @return If something have happened before terminating the application
 	 */
 	public static boolean restart ( long time ) {
 		Logger logger = getLogger();
 		logger.info( "Trying to restart application..." );
-		
+
 		// Get the path to java executable
 		File javaBinDir = new File( System.getProperty( "java.home" ), "bin" );
 		logger.debug( "Java directory: '" + javaBinDir.getAbsolutePath() + "'" );
-		
+
 		File[] possiblePaths = {
 			new File( javaBinDir, "javaw.exe" ),
 			new File( javaBinDir, "java.exe" ),
@@ -163,7 +163,7 @@ public final class Hazelnutt {
 			i++;
 		} while ( i < possiblePaths.length && !javaPath.exists() );
 		logger.debug( "Java executable: '" + javaPath.getAbsolutePath() + "'" );
-		
+
 		// Get path to JAR
 		File jarFile = null;
 		try {
@@ -173,7 +173,7 @@ public final class Hazelnutt {
 			e.printStackTrace();
 			return false;
 		}
-		
+
 		String[] command = null;
 		if ( !jarFile.isDirectory() ) {
 			logger.debug( "JAR file: '" + jarFile.getAbsolutePath() + "'" );
@@ -193,7 +193,7 @@ public final class Hazelnutt {
 			};
 			System.out.println( "\"" + command[0] + "\" \"" + command[1] + "\" \"" + command[2] + "\" \"" + command[3] + "\"" );
 		}
-		
+
 		// Execute
 		try {
 			Runtime.getRuntime().exec( command );
@@ -201,40 +201,40 @@ public final class Hazelnutt {
 			e.printStackTrace();
 			return false;
 		}
-		
+
 		// Terminate this application
 		terminate( time );
 		return true;
 	}
-	
+
 	/**
 	 * Terminates the application in at most <i>time</i> milliseconds for
-	 * every alive thread. 
-	 * 
+	 * every alive thread.
+	 *
 	 * @param time Number of milliseconds to wait for each thread to terminate
 	 */
 	public static void terminate ( long time ) {
 		Logger logger = getLogger();
 		logger.info( "Terminating application..." );
-		
+
 		try {
 			getFrame().dispose();
-			
+
 			// Get the root thread group
 			ThreadGroup rootThreadGroup = Thread.currentThread().getThreadGroup();
 			while ( rootThreadGroup.getParent() != null ) {
 				rootThreadGroup = rootThreadGroup.getParent();
 			}
-			
+
 			// Declare some collections
 			Queue<ThreadGroup> threadGroups = new LinkedList<ThreadGroup>();
 			Queue<Thread> threads = new LinkedList<Thread>();
-			
+
 			// Get ALL groups
 			threadGroups.add( rootThreadGroup );
 			while ( !threadGroups.isEmpty() ) {
 				ThreadGroup group = threadGroups.remove();
-				
+
 				Thread[] subThreads = new Thread[ group.activeCount()*2 ];
 				//group.enumerate( subThreads );
 				for ( Thread subThread : subThreads ) {
@@ -242,7 +242,7 @@ public final class Hazelnutt {
 						threads.add( subThread );
 					}
 				}
-				
+
 				ThreadGroup[] subThreadGroups = new ThreadGroup[ group.activeGroupCount()*2 ];
 				for ( ThreadGroup subThreadGroup : subThreadGroups ) {
 					if ( subThreadGroup != null ) {
@@ -250,12 +250,12 @@ public final class Hazelnutt {
 					}
 				}
 			}
-			
+
 			// Join a maximum of time milliseconds for all non-daemon threads
 			while ( !threads.isEmpty() ) {
 				Thread thread = threads.remove();
 				LOGGER.trace( thread );
-				
+
 				if ( !thread.isDaemon() && thread != Thread.currentThread() ) {
 					logger.trace( "Waiting for thread '" + thread.getName() + "'" );
 					thread.join( time );
@@ -265,37 +265,37 @@ public final class Hazelnutt {
 					}
 				}
 			}
-		
+
 		} catch ( Throwable e ) {
 			LOGGER.warn( "Interrupted while terminating application", e );
-			
+
 		} finally {
 			// Exit the program
 			System.exit( 0 );
 		}
 	}
-	
+
 	/**
 	 * Runs the application
-	 * 
+	 *
 	 * @param args
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public static void main ( String[] args )
 	throws Exception {
 		// Print some version information
 		LOGGER.log( Level.OFF, "----------------" );
 		LOGGER.info( "Hazelnutt " + VERSION );
-		
+
 		LOGGER.trace( "Selecting Look&Feel..." );
-		
+
 		// Select the L&F from configuration or the default if not present
 		String slaf = CONFIG.getString( "Hazelnutt.gui.lookAndFeel" );
 		if ( slaf == null ) {
 			LOGGER.info( "Configuration entry for L&F missing, creating default" );
 			slaf = UIManager.getSystemLookAndFeelClassName();
 		}
-		
+
 		// Set it or print an error
 		try {
 			UIManager.setLookAndFeel( slaf );
@@ -303,16 +303,16 @@ public final class Hazelnutt {
 			LOGGER.warn( "Error while selecting the L&F \"" + slaf +
 				"\", leaving default" );
 		}
-		
+
 		// Update the configuration with the currently selected L&F
 		LookAndFeel laf = UIManager.getLookAndFeel();
 		LOGGER.debug( "L&F selected: " + laf.getName() +
 			" (" + laf.getClass().getName() + ")" );
-		CONFIG.setProperty( 
+		CONFIG.setProperty(
 			"Hazelnutt.gui.lookAndFeel",
 			laf.getClass().getName()
 		);
-		
+
 		// Load the frame
 		LOGGER.trace( "Launching main frame..." );
 		SwingUtilities.invokeLater( new Runnable () {

@@ -6,7 +6,7 @@ Hazelnut is a level editor for the Bugs Bunny Crazy Castle 2 Gameboy ROM.
 
 Running
 -------
-   
+
 Hazelnutt is programmed in Java, so all you need to execute it is an
 installed Java runtime Environment, which you probably already have.
 
@@ -23,7 +23,7 @@ other things the program needs to remember.
 
 To run the program, double click `Hazelnutt.jar`. It should launch it
 directly. If that doesn't work, use the following command:
-   
+
     java -jar Hazelnutt.jar
 
 On Windows, you can use `javaw` instead of `java` to hide the dummy console
@@ -33,14 +33,14 @@ where `java.exe` and `javaw.exe` are to the `PATH` to use those commands.
 
 Known Issues
 ------------
- 
+
    + When a level is resized, `$00` is added on new positions instead of `$03`
 
 
 Credits
 -------
- 
-Programmed by Daniel Escoz (Darkhogg) <http://darkhogg.es>
-Silk Icon Set by Mark James <http://www.famfamfam.com/lab/icons/silk>
-Log4J by The Apache Software Foundation <http://logging.apache.org/log4j/1.2>
-Apache Commons by The Apache Software Foundation <http://commons.apache.org>
+
+- Programmed by Daniel Escoz <https://danielescoz.dev>
+- Silk Icon Set by Mark James <https://github.com/legacy-icons/famfamfam-silk> (Original link, broken: <http://www.famfamfam.com/lab/icons/silk>)
+- Log4J by The Apache Software Foundation <http://logging.apache.org/log4j/1.2>
+- Apache Commons by The Apache Software Foundation <http://commons.apache.org>

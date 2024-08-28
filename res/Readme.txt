@@ -1,22 +1,22 @@
    _________________________________________________________________________
-    
-     @@  @@  @@@@  @@@@@@ @@@@@@ @@@@@@ @@     @@  @@ @@  @@ @@@@@@ @@@@@@ 
-     @@  @@ @@  @@    @@     @@  @@     @@     @@@ @@ @@  @@   @@     @@   
-     @@@@@@ @@@@@@   @@     @@   @@@@   @@     @@@@@@ @@  @@   @@     @@   
-     @@  @@ @@  @@  @@     @@    @@     @@     @@ @@@ @@  @@   @@     @@   
-     @@  @@ @@  @@ @@@@@@ @@@@@@ @@@@@@ @@@@@@ @@  @@  @@@@    @@     @@   
+
+     @@  @@  @@@@  @@@@@@ @@@@@@ @@@@@@ @@     @@  @@ @@  @@ @@@@@@ @@@@@@
+     @@  @@ @@  @@    @@     @@  @@     @@     @@@ @@ @@  @@   @@     @@
+     @@@@@@ @@@@@@   @@     @@   @@@@   @@     @@@@@@ @@  @@   @@     @@
+     @@  @@ @@  @@  @@     @@    @@     @@     @@ @@@ @@  @@   @@     @@
+     @@  @@ @@  @@ @@@@@@ @@@@@@ @@@@@@ @@@@@@ @@  @@  @@@@    @@     @@
    _________________________________________________________________________
 
  & DISCLAIMER
- 
-   Hazelnutt  Copyright (C) 2010, 2011  Daniel Escoz
+
+   Hazelnutt  Copyright (C) 2010-2024  Daniel Escoz
    This program comes with ABSOLUTELY NO WARRANTY.
    This is free software, and you are welcome to redistribute it
    under certain conditions. See 'License.txt' for details.
- 
+
 
  & INSTALLING AND RUNNING
-   
+
    Hazelnutt is programmed in Java, so all you need to execute it is an
    installed Java runtime Environment, which you probably already have.
 
@@ -33,26 +33,21 @@
 
    To run the program, double click 'Hazelnutt.jar'. It should launch it
    directly. If that doesn't work, use the following command:
-   
+
      java -jar Hazelnutt.jar
 
    On Windows, you can use 'javaw' instead of 'java' to hide the dummy console
    window. If you are on Windows, you will probably need to add the directory
    where 'java.exe' and 'javaw.exe' are to the PATH to use those commands.
 
-
- & USAGE
-
-
  & KNOWN ISSUES
- 
+
    - When a level is resized, $00 is added on new positions instead of $03
 
 
  & CREDITS
- 
-   Programmed by Daniel Escoz (Darkhogg) <http://darkhogg.es>
+
+   Programmed by Daniel Escoz <https://danielescoz.dev>
    Silk Icon Set by Mark James <http://www.famfamfam.com/lab/icons/silk>
    Log4J by The Apache Software Foundation <http://logging.apache.org/log4j/1.2>
    Apache Commons by The Apache Software Foundation <http://commons.apache.org>
-
