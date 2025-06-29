@@ -47,7 +47,7 @@
 
   <!-- Compiles everything from the source directory to the build directory -->
   <target name="compile" depends="-mkdir-build">
-    <javac srcdir="${dir.src}" destdir="${dir.build}" includeantruntime="false" release="22">
+    <javac srcdir="${dir.src}" destdir="${dir.build}" includeantruntime="false">
       <classpath>
         <fileset dir="${dir.lib}" includes="**/*.jar" />
       </classpath>

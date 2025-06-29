@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum EnemyGroup {
-	DAFFY		( 0x03 ),
-	YOSEMITE	( 0x04 ),
-	SYLVESTER	( 0x05 ),
+	NORMAL_A	( 0x03 ),
+	NORMAL_B	( 0x04 ),
+	NORMAL_C	( 0x05 ),
 	BOSS		( 0x06 );
 	
 	private final static Map<Byte,EnemyGroup> byteMap;

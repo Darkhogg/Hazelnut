@@ -1,0 +1,60 @@
+# Changelog
+
+## [1.0.10] - 2025-06-29
+  - Updated enemy groups' and level themes' names
+  - Removed "Help" menu completely
+  - Why am I still updating this?
+
+## [1.0.9] - 2024-08-28
+  - Added a build system
+  - Fixed a bug caused by a missing icon
+  - Removed the "Check for updates" menu option
+  - Why am I updating this 13 years later?
+
+## [1.0.8] - 2011-08-03
+  - Who knows, I'm writing this 13 years in the future because it was missing from the changelog...
+
+## [1.0.7] - 2010-12-30
+  - Refactored almost everything and changed to fix a spelling mistake...
+    Yes, it is Hazelnutt, with a single Z, I don't know what I was thinking
+  - Included a 'License.txt' containing the GPL license and updated all files from the 'es.darkhogg.hazelnutt' package
+    to contain a disclaimer.
+  - (1.0.7_1) Changed Enemy Group and Theme names.
+  - (1.0.7_2) As soon as a ROM is loaded, Level 1 is selected.
+  - TO DO: Add an option to switch between two different mouse button schemes
+
+## [1.0.6] - 2010-12-25
+  - Merry Christmas!!
+  - If you press 'PageUp' or 'PageDown', the editor will load the next or previous level, respectively.
+  - Added a 'Recent files' menu option which remembers the last 8 successfully opened ROMs.
+  - Fixed the 'Load Rom' action not asking for saving before loading a new file.
+
+## [1.0.5] - 2010-12-24
+  - Added keyboard shortcuts to almost everything on the menus
+  - Added a 'Readme.txt' file both in the ZIP and inside the JAR
+  - Made the 'About' dialog, now renamed to 'Readme', show the 'Readme.txt' file in a text area.
+
+## [1.0.4] - 2010-12-23
+  - Added a self-update feature in the 'Help' > 'Check Updates' menu item.
+
+## [1.0.3] - 2010-12-22
+  - Added the ability to import and export levels from/to files.
+  - Fixed a bug where enemies $05 and $06 in the entity selector were swapped
+
+## [1.0.2] - 2010-12-20
+  - Fixed a bug where enemies $02 and $03 in the entity selector were swapped
+  - Fixed a bug where deleted entities weren't actually removed from the ROM
+
+## [1.0.1] - 2010-12-17
+  - Added logic to 'Reload Level' and 'Save Level' on the 'File' menu
+  - Added 'Save As...', which brings a dialog that lets you select a new file.
+    Subsequent 'Save' actions will write to the last selected file in the 'Save As' dialog.
+    If the saving fails for any reason, the file is not considered selected
+  - Added 'Clear Level', which lets you delete every entity on the level and set all combos to value $03 at once.
+  - Added information about the selected file and level and its modified state in the window title.
+  - 'Save', 'Reload Level' and 'Save Level' are now disabled when pressing them would have no real effects
+  - The editor now recalls the last opened directory
+  - Added es.darkhogg.util package with Version in it, and refactored IntVector to fit in that package.
+
+## [1.0.0] - 2010-12-16
+  - First version!!

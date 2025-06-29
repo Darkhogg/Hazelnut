@@ -4,10 +4,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Represents a version with four integer components: <i>Major</i>,
- * <i>Minor</>, <i>Revision</i> and <i>Build</i> numbers.
- * <p>
- * TODO Document this a bit more
+ * Represents a version with three integer components: <i>Major</i>,
+ * <i>Minor</> and <i>Patch</i> numbers.
  * <p>
  * This class is <i>immutable</i>
  * 
@@ -27,44 +25,25 @@ public final class Version implements Comparable<Version> {
 	private final int minor;
 	
 	/**
-	 * Revision number
+	 * Patch number
 	 */
-	private final int revision;
+	private final int patch;
 	
 	/**
-	 * Build number
-	 */
-	private final int build;
-	
-	/**
-	 * Constructs a version using the given <i>major</i>, <i>minor</i>,
-	 * <i>revision</i> and <i>build</i> numbers.
+	 * Constructs a version using the given <i>major</i>, <i>minor</i> and
+	 * <i>patch</i> numbers.
 	 * 
 	 * @param major The major version number
 	 * @param minor The minor version number
-	 * @param revision The revision number
-	 * @param build The build number
+	 * @param patch The patch number
 	 */
-	public Version ( int major, int minor, int revision, int build ) {
-		if ( major < 0 || minor < 0 || revision < 0 || build < 0 ) {
+	public Version ( int major, int minor, int patch ) {
+		if ( major < 0 || minor < 0 || patch < 0) {
 			throw new IllegalArgumentException();
 		}
 		this.major = major;
 		this.minor = minor;
-		this.revision = revision;
-		this.build = build;
-	}
-	
-	/**
-	 * Constructs a version using the given <i>major</i>, <i>minor</i> and
-	 * <i>revision</i> numbers and zero as the <i>build</i> number.
-	 * 
-	 * @param major The major version number
-	 * @param minor The minor version number
-	 * @param revision The revision number
-	 */
-	public Version ( int major, int minor, int revision ) {
-		this( major, minor, revision, 0 );
+		this.patch = patch;
 	}
 	
 	/**
@@ -75,7 +54,7 @@ public final class Version implements Comparable<Version> {
 	 * @param minor The minor version number
 	 */
 	public Version ( int major, int minor ) {
-		this( major, minor, 0, 0 );
+		this( major, minor, 0 );
 	}
 	
 	/**
@@ -85,7 +64,7 @@ public final class Version implements Comparable<Version> {
 	 * @param major The major version number
 	 */
 	public Version ( int major ) {
-		this( major, 0, 0, 0 );
+		this( major, 0, 0 );
 	}
 	
 	/**
@@ -105,15 +84,8 @@ public final class Version implements Comparable<Version> {
 	/**
 	 * @return The revision number of this version
 	 */
-	public int getRevision() {
-		return revision;
-	}
-	
-	/**
-	 * @return The build of this version
-	 */
-	public int getBuild () {
-		return build;
+	public int getPatch() {
+		return patch;
 	}
 	
 	/**
@@ -127,8 +99,6 @@ public final class Version implements Comparable<Version> {
 	 *   <li> <tt>A.major == B.major && A.minor &lt; B.minor</tt>
 	 *   <li> <tt>A.major == B.major && A.minor == B.minor && A.revision &lt;
 	 *        B.revision</tt>
-	 *   <li> <tt>A.major == B.major && A.minor == B.minor && A.revision ==
-	 *        B.revision && A.build &lt; B.build</tt>
 	 *   </ul>
 	 * <li>A version <i>A</i> is <i>greater than</i> another version <i>B</i>
 	 * if <i>A</i> is not <i>equals</i> or <i>lower than</i> <i>B</i>.
@@ -142,10 +112,7 @@ public final class Version implements Comparable<Version> {
 		if ( value == 0 ) {
 			value = minor - ver.minor;
 			if ( value == 0 ) {
-				value = revision - ver.revision;
-				if ( value == 0 ) {
-					value = build - ver.build;
-				}
+				value = patch - ver.patch;
 			}
 		}
 		return value;
@@ -166,8 +133,7 @@ public final class Version implements Comparable<Version> {
 		Version ver = (Version) obj;
 		return ver.major == major
 			&& ver.minor == minor
-			&& ver.revision == revision
-			&& ver.build == build;
+			&& ver.patch == patch;
 	}
 	
 	/**
@@ -176,44 +142,29 @@ public final class Version implements Comparable<Version> {
 	 */
 	@Override
 	public int hashCode () {
-		return ((((((major*31)+minor)*31)+revision)*31)+build)*31;
+		return ((((major*31)+minor)*31)+patch)*31;
 	}
 
 	/**
 	 * Converts this version to a string that represents it and is
-	 * human-readable. The <tt>String</tt> returned by this object is:
-	 * <ul>
-	 * <li>If <i>build</i> is not zero, a string of the form:
-	 * <i>M</i>.<i>m</i>.<i>r</i>_<i>b</i>
-	 * <li>If <i>build</i> is zero and <i>revision</i> is not, a string of the
-	 * form: <i>M</i>.<i>m</i>.<i>r</i>
-	 * <li>In <i>build</i> and <i>revision</i> are both zero, a string of the
-	 * form: <i>M</i>.<i>m</i>
-	 * </ul>
-	 * Where <i>M</i>, <i>m</i>, <i>r</i> and <i>b</i> are, respectively, the
-	 * <i>major</i> number, the <i>minor</i> number, the <i>revision</i> number
-	 * and the <i>build</i>.
+	 * human-readable. The <tt>String</tt> returned by this object is always of
+	 * the form <tt>"M.m.p"</tt>.
 	 */
 	@Override
 	public String toString () {
 		StringBuilder sb = new StringBuilder();
+
 		sb.append( major );
 		sb.append( '.' );
 		sb.append( minor );
-		if ( revision > 0 || build > 0 ) {
-			sb.append( '.' );
-			sb.append( revision );
-			if ( build > 0 ) {
-				sb.append( '_' );
-				sb.append( build );
-			}
-		}
+		sb.append( '.' );
+		sb.append( patch );
 
 		return sb.toString();
 	}
 	
 	/**
-	 * Returns a Version object which represents the same version than the
+	 * Returns a Version object which represents the same version as the
 	 * String object given.
 	 * <p>
 	 * For any <tt>Version</tt> <i>V</i>, the expression
@@ -227,25 +178,16 @@ public final class Version implements Comparable<Version> {
 	 *         any <tt>Version</tt>.
 	 */
 	public static Version valueOf ( String str ) {
-		Pattern fourPattern = Pattern.compile( "^(\\d+)\\.(\\d+)\\.(\\d+)_(\\d+)$" );
 		Pattern threePattern = Pattern.compile( "^(\\d+)\\.(\\d+)\\.(\\d+)$" );
 		Pattern twoPattern = Pattern.compile( "^(\\d+)\\.(\\d+)$" );
 		Pattern onePattern = Pattern.compile( "^(\\d+)$" );
 
-		Matcher fourMatcher = fourPattern.matcher( str );
 		Matcher threeMatcher = threePattern.matcher( str );
 		Matcher twoMatcher = twoPattern.matcher( str );
 		Matcher oneMatcher = onePattern.matcher( str );
 		
 		Version ver = null;
-		if ( fourMatcher.matches() ) {
-			ver = new Version(
-				Integer.parseInt( fourMatcher.group( 1 ) ),
-				Integer.parseInt( fourMatcher.group( 2 ) ),
-				Integer.parseInt( fourMatcher.group( 3 ) ),
-				Integer.parseInt( fourMatcher.group( 4 ) )
-			);
-		} else if ( threeMatcher.matches() ) {
+		if ( threeMatcher.matches() ) {
 			ver = new Version(
 				Integer.parseInt( threeMatcher.group( 1 ) ),
 				Integer.parseInt( threeMatcher.group( 2 ) ),

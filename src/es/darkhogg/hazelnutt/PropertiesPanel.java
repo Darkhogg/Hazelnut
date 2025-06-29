@@ -78,19 +78,14 @@ public class PropertiesPanel extends JPanel {
 	 * Create the panel.
 	 */
 	public PropertiesPanel ( Level level ) {
-		
 		JLabel labelEnemyGroup = new JLabel("Enemy Group:");
 		
 		JLabel labelPass = new JLabel("Password:");
-		
 		JLabel labelArea = new JLabel("Level Area:");
-		
 		JLabel labelSize = new JLabel("Level Size:");
-		
 		JLabel labelTheme = new JLabel("Theme:");
-		
 		JLabel labelWeapon = new JLabel("Weapon:");
-		
+
 		newArea = new JTextField();
 		newArea.setEditable(false);
 		newArea.setColumns(3);
@@ -135,7 +130,7 @@ public class PropertiesPanel extends JPanel {
 				changed();
 			}
 		});
-		enemyGroupCombo.setModel(new DefaultComboBoxModel(new String[] {"Daffy's Fowl Fighters", "Yosemite's Gunners", "Sylvester's Munchers", "Boss"}));
+		enemyGroupCombo.setModel(new DefaultComboBoxModel(new String[] {"[$03] Tune Squad", "[$04] Hazel's Headhunters", "[$05] Monstars", "[$06] Witch Hazel"}));
 		
 		themeCombo = new JComboBox();
 		themeCombo.addActionListener(new ActionListener() {
@@ -143,7 +138,7 @@ public class PropertiesPanel extends JPanel {
 				changed();
 			}
 		});
-		themeCombo.setModel(new DefaultComboBoxModel(new String[] {"Chamber of Chaos", "Dungeon of Doom", "Power Tower", "Luxurious Lounge", "Grand Guard House", "Perilous Prison", "Playhouse Palace"}));
+		themeCombo.setModel(new DefaultComboBoxModel(new String[] {"[$00] Chamber of Chaos", "[$01] Dungeon of Doom", "[$02] Power Tower", "[$03] Luxurious Lounge", "[$04] Grand Guard House", "[$05] Perilous Prison", "[$06] Playhouse Palace"}));
 		
 		weaponCombo = new JComboBox();
 		weaponCombo.addActionListener(new ActionListener() {
@@ -151,7 +146,7 @@ public class PropertiesPanel extends JPanel {
 				changed();
 			}
 		});
-		weaponCombo.setModel(new DefaultComboBoxModel(new String[] {"Bow & Arrows", "Bombs"}));
+		weaponCombo.setModel(new DefaultComboBoxModel(new String[] {"[$00] Bow & Arrows", "[$01] Bombs"}));
 		
 		applyButton = new JButton("Apply Changes");
 		applyButton.addActionListener(new ActionListener() {
@@ -260,7 +255,6 @@ public class PropertiesPanel extends JPanel {
 					.addGap(0))
 		);
 		setLayout(groupLayout);
-
 		
 		// Perform actual initialization
 		//mainFrame = main;

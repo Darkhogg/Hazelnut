@@ -43,7 +43,7 @@ public final class Hazelnutt {
 	/**
 	 * Version of the program
 	 */
-	private static final Version VERSION = new Version( 1, 0, 9 );
+	private static final Version VERSION = new Version( 1, 0, 10 );
 
 	/**
 	 * Logger for the whole application
@@ -284,7 +284,6 @@ public final class Hazelnutt {
 	public static void main ( String[] args )
 	throws Exception {
 		// Print some version information
-		LOGGER.log( Level.OFF, "----------------" );
 		LOGGER.info( "Hazelnutt " + VERSION );
 
 		LOGGER.trace( "Selecting Look&Feel..." );
@@ -298,6 +297,7 @@ public final class Hazelnutt {
 
 		// Set it or print an error
 		try {
+			LOGGER.trace( "Trying to select L&F: " + slaf );
 			UIManager.setLookAndFeel( slaf );
 		} catch ( Exception e ) {
 			LOGGER.warn( "Error while selecting the L&F \"" + slaf +

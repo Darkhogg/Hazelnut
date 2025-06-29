@@ -116,7 +116,7 @@ public final class RomLevelFormat extends LevelFormat {
 	public Level loadLevelFromBuffer ( ByteBuffer buffer ) {
 		return new Level(
 			loadRomLevelFromBuffer( buffer, false ),
-			EnemyGroup.DAFFY,
+			EnemyGroup.NORMAL_A,
 			null
 		);
 	}

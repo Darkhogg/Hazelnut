@@ -50,7 +50,6 @@ import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
@@ -140,8 +139,6 @@ public class EditorFrame extends JFrame {
 	private JToggleButton barViewDoorItems;
 	private JToggleButton barViewEnemies;
 	private JToggleButton barViewTypes;
-	private JMenu mnHelp;
-	private JMenuItem mntmAbout;
 	private JPanel panel;
 	private JMenuItem menuLoadRom;
 	private JMenuItem menuSaveRom;
@@ -484,21 +481,6 @@ public class EditorFrame extends JFrame {
 		mntmPreferences.setMnemonic('P');
 		mntmPreferences.setIcon(new ImageIcon(EditorFrame.class.getResource("/es/darkhogg/hazelnutt/icon_preferences.png")));
 		//mnEdit.add(mntmPreferences);
-
-		mnHelp = new JMenu("Help");
-		mnHelp.setMnemonic('H');
-		menuBar.add(mnHelp);
-
-		mntmAbout = new JMenuItem("Readme...");
-		mntmAbout.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0));
-		mntmAbout.setMnemonic('r');
-		mntmAbout.setIcon(new ImageIcon(EditorFrame.class.getResource("/es/darkhogg/hazelnutt/about.png")));
-		mntmAbout.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				actionAbout();
-			}
-		});
-		mnHelp.add(mntmAbout);
 
 		contentPane = new JPanel();
 		contentPane.setBorder( new EmptyBorder( 5, 5, 5, 5 ) );
@@ -1516,12 +1498,6 @@ public class EditorFrame extends JFrame {
 
 			//memoryMonitor.cancel( true );
 		}
-	}
-
-	private void actionAbout () {
-		JDialog dialog = new AboutDialog();
-		dialog.setModal( true );
-		dialog.setVisible( true );
 	}
 
 	/*public JPanel getLogPanel () {
