@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.0.11] - 2025-07-01
+  - Fixed level themes' names not being updated
+
 ## [1.0.10] - 2025-06-29
   - Updated enemy groups' and level themes' names
   - Removed "Help" menu completely

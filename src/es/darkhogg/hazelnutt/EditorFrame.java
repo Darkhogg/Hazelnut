@@ -1320,14 +1320,12 @@ public class EditorFrame extends JFrame {
 	}
 
 	private void actionLevelUp () {
-		System.out.println( "LevelUp " + selectedLevelNum + " + 1" );
 		if ( levelFeaturesEnabled && selectedLevelNum < 28 && checkLevelModified() ) {
 			selectLevelNum( selectedLevelNum+1 );
 		}
 	}
 
 	private void actionLevelDown () {
-		System.out.println( "LevelDown " + selectedLevelNum + " - 1"  );
 		if ( levelFeaturesEnabled && selectedLevelNum > 0 && checkLevelModified() ) {
 			selectLevelNum( selectedLevelNum-1 );
 		}

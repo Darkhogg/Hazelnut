@@ -18,6 +18,7 @@ package es.darkhogg.hazelnutt;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.security.Guard;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -57,9 +58,9 @@ public class PropertiesPanel extends JPanel {
 	//private EditorFrame mainFrame;
 	private Level level;
 	private JTextField passField;
-	private JComboBox enemyGroupCombo;
-	private JComboBox weaponCombo;
-	private JComboBox themeCombo;
+	private JComboBox<String> enemyGroupCombo;
+	private JComboBox<String> weaponCombo;
+	private JComboBox<String> themeCombo;
 
 	private boolean hasChanged;
 	
@@ -124,29 +125,45 @@ public class PropertiesPanel extends JPanel {
 		});
 		passField.setColumns(4);
 		
-		enemyGroupCombo = new JComboBox();
+		enemyGroupCombo = new JComboBox<>();
 		enemyGroupCombo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				changed();
 			}
 		});
-		enemyGroupCombo.setModel(new DefaultComboBoxModel(new String[] {"[$03] Tune Squad", "[$04] Hazel's Headhunters", "[$05] Monstars", "[$06] Witch Hazel"}));
+		enemyGroupCombo.setModel(new DefaultComboBoxModel<>(new String[] {
+			"[$03] Tune Squad",
+			"[$04] Hazel's Headhunters",
+			"[$05] Monstars",
+			"[$06] Witch Hazel",
+		}));
 		
-		themeCombo = new JComboBox();
+		themeCombo = new JComboBox<>();
 		themeCombo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				changed();
 			}
 		});
-		themeCombo.setModel(new DefaultComboBoxModel(new String[] {"[$00] Chamber of Chaos", "[$01] Dungeon of Doom", "[$02] Power Tower", "[$03] Luxurious Lounge", "[$04] Grand Guard House", "[$05] Perilous Prison", "[$06] Playhouse Palace"}));
+		themeCombo.setModel(new DefaultComboBoxModel<>(new String[] {
+			"[$00] Hall",
+			"[$01] Basement",
+			"[$02] Balcony",
+			"[$03] Treasury",
+			"[$04] Gate",
+			"[$05] Garden",
+			"[$06] Funhouse",
+		}));
 		
-		weaponCombo = new JComboBox();
+		weaponCombo = new JComboBox<>();
 		weaponCombo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				changed();
 			}
 		});
-		weaponCombo.setModel(new DefaultComboBoxModel(new String[] {"[$00] Bow & Arrows", "[$01] Bombs"}));
+		weaponCombo.setModel(new DefaultComboBoxModel<>(new String[] {
+			"[$00] Bow & Arrows",
+			"[$01] Bombs",
+		}));
 		
 		applyButton = new JButton("Apply Changes");
 		applyButton.addActionListener(new ActionListener() {

@@ -43,7 +43,7 @@ public final class Hazelnutt {
 	/**
 	 * Version of the program
 	 */
-	private static final Version VERSION = new Version( 1, 0, 10 );
+	private static final Version VERSION = new Version( 1, 0, 11 );
 
 	/**
 	 * Logger for the whole application

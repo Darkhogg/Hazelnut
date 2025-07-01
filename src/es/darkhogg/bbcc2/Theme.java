@@ -5,13 +5,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum Theme {
-	DUNGEON		( 0x00 ),
-	UNDERGROUND	( 0x01 ),
+	HALL		( 0x00 ),
+	BASEMENT	( 0x01 ),
 	BALCONY		( 0x02 ),
 	TREASURY	( 0x03 ),
-	GATEHOUSE	( 0x04 ),
-	WINERY		( 0x05 ),
-	STRIPED		( 0x06 );
+	GATE		( 0x04 ),
+	GARDEN		( 0x05 ),
+	FUNHOUSE	( 0x06 );
 	
 	private final static Map<Byte,Theme> byteMap;
 	static {
