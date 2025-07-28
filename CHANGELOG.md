@@ -1,18 +1,52 @@
 # Changelog
 
+## [1.1.0] - UNRELEASED
+  - Editor changes:
+    - Updated the Look&Feel to FlatLaf
+    - Centered the level within the level editor window
+    - Removed the tabbed pane on the side panel
+    - Made the selected combo/entity display more information
+    - Combo selector includes grid now
+    - Added option to show solid combos
+    - Added a lot more help icons to missing combo types
+    - Added settings panel
+      - With an option to ask before closing
+      - With an option to create backups of saved files
+      - With all of the used palettes, and ability to be changed
+    - Removed the level area restrictions and the fields showing the area
+    - Add new buttons in properties panel to move the level sideways
+    - Removed the "Apply" and "Reset" buttons on the properties panel
+      - Modifications will now be applied immediately
+      - Size modifications as well as level movement via the new arrow buttons is non-destructive
+    - Add warning system with corresponging button and option
+      - Show warningss on misplaced door items
+  - ROM changes:
+    - Combo types and collision are now loaded from the ROM
+    - Level positions are now loaded from the ROM
+    - Tileset locations are now loaded from the ROM
+    - Sprite layouts are now loaded from the ROM
+    - ROM saving now (safely) modifies the level layout to allow for bigger levels
+      - Data after levels in the level banks is moved to the end of the bank to make space
+      - Level positions are picked in order so that levels fit in the ROM
+      - Level data can sometimes overlap if deemed safe to save space
+  - General changes
+    - The editor will store a backup of the original file when saving to prevent data loss (if enabled)
+    - The editor will now warn when loading an unsupported ROM
+    - Normalized everything to `Hazelnut`
+    - A lot of internal small changes to make everything a bit less clunky
+    - Probably some small extra stuff I forgot...
+
 ## [1.0.11] - 2025-07-01
   - Fixed level themes' names not being updated
 
 ## [1.0.10] - 2025-06-29
   - Updated enemy groups' and level themes' names
   - Removed "Help" menu completely
-  - Why am I still updating this?
 
 ## [1.0.9] - 2024-08-28
   - Added a build system
   - Fixed a bug caused by a missing icon
   - Removed the "Check for updates" menu option
-  - Why am I updating this 13 years later?
 
 ## [1.0.8] - 2011-08-03
   - Who knows, I'm writing this 13 years in the future because it was missing from the changelog...

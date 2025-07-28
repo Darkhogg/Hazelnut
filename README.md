@@ -7,24 +7,19 @@ Hazelnut is a level editor for the Bugs Bunny Crazy Castle 2 Gameboy ROM.
 Running
 -------
 
-Hazelnutt is programmed in Java, so all you need to execute it is an
+Hazelnut is programmed in Java, so all you need to execute it is an
 installed Java runtime Environment, which you probably already have.
-
-Make sure you extract the contents of the ZIP to some location, as the
-`lib` folder must be located within the same directory as the
-`Hazelnutt.jar` file. The first time you run the program, it will
-create a `log` directory and a `Hazelnutt.properties` file.
 
 The `log` directory will be filled with logs from the program. Feel free
 to remove them from time to time if they waste too much space.
 
-The `Hazelnutt.properties` file contains some configuration options and
+The `Hazelnut.properties` file contains some configuration options and
 other things the program needs to remember.
 
-To run the program, double click `Hazelnutt.jar`. It should launch it
+To run the program, double click `hazelnut.jar`. It should launch it
 directly. If that doesn't work, use the following command:
 
-    java -jar Hazelnutt.jar
+    java -jar hazelnut.jar
 
 On Windows, you can use `javaw` instead of `java` to hide the dummy console
 window.  If you are on Windows, you will probably need to add the directory
